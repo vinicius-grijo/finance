@@ -44,7 +44,7 @@ def calculate_return( df, column_thr, column_var ):
     completed_trades.index.name = 'n_operation'
     
     # profit = completed_trades.Return.sum()
-    profit = f"{ np.round( completed_trades.Return.sum() / trades['Close'].iloc[0], 2)}%"
+    profit = f"{ np.round( completed_trades.Return.sum() / trades['Close'].iloc[0]*100, 2)}%"
 
     info = { 'Profit': profit, 'Trades':completed_trades, 'Summary': completed_trades.Return.describe(), 'Position':position, 'Trades_full':trades }
     
@@ -60,13 +60,13 @@ def main():
     # Calcule a média móvel dos 200 e dos 50 fechamentos anteriores
     data['200_MA'] = data['Close'].rolling(window=200).mean()
     data['50_MA'] = data['Close'].rolling(window=50).mean()
-    data = data.dropna()
+    data = data['2021-01-01':]
 
     # Aplica e analisa a estratégia
     r = calculate_return( df=data, column_thr='200_MA', column_var='50_MA')
     print()
     print(f"O retorno da estratégia 200_MA foi de { r['Profit'] }. ")
-    print(f"O retorno de Buy and Hold seria de { np.round( (data['Close'].iloc[-1] - data['Close'].iloc[0])/data['Close'].iloc[0] ,2)}%.")
+    print(f"O retorno de Buy and Hold seria de { np.round( (data['Close'].iloc[-1] - data['Close'].iloc[0])/data['Close'].iloc[0]*100 ,2)}%.")
     print()
     print( r['Trades'].to_markdown() )
     print()
@@ -81,6 +81,7 @@ def main():
     plt.title(f'Gráfico de Preço de Fechamento para {ticker}')
     plt.legend()
     plt.grid()
+    plt.savefig(f"200_50_ma_strategy_{ticker}.png")
     plt.show()
 
 if __name__=='__main__':
