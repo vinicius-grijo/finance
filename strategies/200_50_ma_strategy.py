@@ -81,7 +81,7 @@ def main():
     plt.title(f'Gráfico de Preço de Fechamento para {ticker}')
     plt.legend()
     plt.grid()
-    plt.savefig(f"200_50_ma_strategy_{ticker}.png")
+    plt.savefig(f"strategies/200_50_ma_strategy_{ticker}.png")
     plt.show()
 
 if __name__=='__main__':
